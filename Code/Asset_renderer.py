@@ -22,5 +22,11 @@ class Object_renderer:
         self.snow1 = pygame.image.load('Assets/Graphics/snow1.png').convert_alpha()
 
         self.bush = pygame.image.load('Assets/Graphics/bush_outline.png').convert_alpha()
+        self.bush_evil = pygame.image.load('Assets/Graphics/bush_evil.png').convert_alpha()
 
         self.sub = pygame.image.load('Assets/Graphics/sub_bush.png').convert_alpha()
+
+
+        #-----PLAYER-----
+        self.player_idle = pygame.image.load('Assets/Graphics/motorbike/noarm.png').convert_alpha()
+        self.player_arm = pygame.image.load('Assets/Graphics/motorbike/arm.png').convert_alpha()

@@ -16,13 +16,37 @@ class Generic(pygame.sprite.Sprite):
     #     self.image.draw()
     #     print("meant to darw")
 
-class Bush(pygame.sprite.Sprite):
-    def __init__(self, pos, surf, groups):
-        super().__init__(pos, surf, groups)
-        self.hitbox = self.rect.copy()
-
 class Block(Generic):
     def __init__(self, pos, surf, groups, z):
         super().__init__(pos, surf, groups, z)
         self.hitbox = self.rect.copy().inflate(-10, 0)
         self.image = pygame.transform.scale(self.image, (TILE_SIZE *2, TILE_SIZE*2))
+
+class Bush(Generic):
+    def __init__(self, pos, surf, groups, z, game):
+        super().__init__(pos, surf, groups, z)
+        self.game = game
+        self.pos = pos
+
+        self.hitbox = self.rect.copy().inflate(-10, 0)
+        self.image = pygame.transform.scale(self.image, (TILE_SIZE *2, TILE_SIZE*2))
+    
+    def update(self, dt):
+        if self.game.time == 10:
+            Enemies(self.pos, pygame.surface.Surface((64,64)), self.game.all_sprites)
+    
+
+class Enemies(pygame.sprite.Sprite):
+    def __init__(self, pos, surf, groups, z_layer = LAYERS['main']):
+        super().__init__(groups)
+
+        self.image = surf
+        self.image.fill('red')
+        self.rect = self.image.get_rect(center = pos)
+
+        self.hitbox = self.rect.copy()
+
+        self.z = z_layer
+    
+    def update(self, dt):
+        pass

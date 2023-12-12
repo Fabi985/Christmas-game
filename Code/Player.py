@@ -1,10 +1,12 @@
 import pygame
 from Config import *
+from Asset_renderer import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, group, collision_sprites):
+    def __init__(self, pos, group, collision_sprites, game):
         super().__init__(group)
+        self.game = game
 
         self.display_surface = pygame.display.get_surface()
 
@@ -16,8 +18,8 @@ class Player(pygame.sprite.Sprite):
         
         #------HITBOX---------
         self.PLAYER_SIZE = 64
-        self.image = pygame.surface.Surface((64,64))# self.animations[self.status][self.frame_index]
-        self.image.fill('red')
+        self.image = self.game.asset_loader.player_idle#pygame.surface.Surface((64,64))# self.animations[self.status][self.frame_index]wa
+        self.player_arm = self.game.asset_loader.player_arm
         
         self.rect = self.image.get_rect(center = pos)
         self.z = LAYERS['player']
@@ -97,7 +99,7 @@ class Player(pygame.sprite.Sprite):
                         self.pos.y = self.hitbox.centery
 
     def update(self, dt):
-        self.image = pygame.transform.scale(self.image, (self.PLAYER_SIZE, self.PLAYER_SIZE))
+        self.image = pygame.transform.scale(self.image, (self.PLAYER_SIZE, self.PLAYER_SIZE*2))
         self.input()
         self.move(dt)
         self.get_status()

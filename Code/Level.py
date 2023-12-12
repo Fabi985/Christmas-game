@@ -1,4 +1,5 @@
 import pygame
+import random
 from Config import *
 from Overlay import *
 from Player import *
@@ -19,6 +20,8 @@ class Level:
 
         self.setup()
         self.overlay = Overlay()
+
+        self.time = 0
     
     def setup(self):
         self.tilemap = self.create_tilemap()
@@ -34,9 +37,13 @@ class Level:
                     groups = self.all_sprites,
                     z_layer = LAYERS['ground'])
                 if column == 2:
-                    Block((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.bush, [self.all_sprites, self.collision_sprites], z = LAYERS['bush'])
+                    ran = random.randint(1, 100)
+                    if ran >= 15:
+                        Block((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.bush, [self.all_sprites, self.collision_sprites], z = LAYERS['bush'])
+                    else:
+                        Bush((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.bush_evil, [self.all_sprites, self.collision_sprites], z = LAYERS['bush'], game=self)
                 if column == 'p':
-                    self.player = Player((j*TILE_SIZE, i*TILE_SIZE), self.all_sprites, self.collision_sprites)
+                    self.player = Player((j*TILE_SIZE, i*TILE_SIZE), self.all_sprites, self.collision_sprites, self)
                     Generic(
                     pos = (j*TILE_SIZE, i*TILE_SIZE), 
                     surf = self.asset_loader.snow1,
@@ -48,9 +55,14 @@ class Level:
                     surf = self.asset_loader.snow1,
                     groups = self.all_sprites,
                     z_layer = LAYERS['ground'])
-                    Block((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.bush, [self.all_sprites, self.collision_sprites], z = LAYERS['bush'])
+                    ran = random.randint(1, 100)
+                    if ran >= 15:
+                        Block((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.bush, [self.all_sprites, self.collision_sprites], z = LAYERS['bush'])
+                    else:
+                        Bush((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.bush_evil, [self.all_sprites, self.collision_sprites], z = LAYERS['bush'], game=self)
 
     def run(self, dt):
+        self.time += 1
         self.display_surface.fill('black')
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
@@ -77,8 +89,8 @@ class Camera_group(pygame.sprite.Group):
                     self.display_surface.blit(sprite.image, offset_rect)
 
                     # displays hitboxes
-                    # if sprite == player:
-                    #     pygame.draw.rect(self.display_surface,'red',offset_rect,5)
-                    #     hitbox_rect = player.hitbox.copy()
-                    #     hitbox_rect.center = offset_rect.center
-                    #     pygame.draw.rect(self.display_surface,'green',hitbox_rect,5)
+                    if sprite == player:
+                        pygame.draw.rect(self.display_surface,'red',offset_rect,5)
+                        hitbox_rect = player.hitbox.copy()
+                        hitbox_rect.center = offset_rect.center
+                        pygame.draw.rect(self.display_surface,'green',hitbox_rect,5)
