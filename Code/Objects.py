@@ -19,25 +19,29 @@ class Generic(pygame.sprite.Sprite):
 class Block(Generic):
     def __init__(self, pos, surf, groups, z):
         super().__init__(pos, surf, groups, z)
-        self.hitbox = self.rect.copy().inflate(-10, 0)
+        self.rect = self.image.get_rect(center = pos)
+        self.hitbox = self.rect.copy().inflate(0, 0)
         self.image = pygame.transform.scale(self.image, (TILE_SIZE *2, TILE_SIZE*2))
 
 class Bush(Generic):
-    def __init__(self, pos, surf, groups, z, game):
+    def __init__(self, pos, surf, groups, z, game, direction):
         super().__init__(pos, surf, groups, z)
         self.game = game
         self.pos = pos
 
-        self.hitbox = self.rect.copy().inflate(-10, 0)
+        self.rect = self.image.get_rect(center = pos)
+        self.hitbox = self.rect.copy().inflate(0, 0)
         self.image = pygame.transform.scale(self.image, (TILE_SIZE *2, TILE_SIZE*2))
+
+        self.direction = direction
     
     def update(self, dt):
         if self.game.time == 10:
-            Enemies(self.pos, pygame.surface.Surface((64,64)), self.game.all_sprites, self)
+            Enemies(self.pos, pygame.surface.Surface((64,64)), [self.game.all_sprites, self.game.collision_sprites], self.game, self.direction)
     
 
 class Enemies(pygame.sprite.Sprite):
-    def __init__(self, pos, surf, groups, game):
+    def __init__(self, pos, surf, groups, game, direction):
         super().__init__(groups)
         self.game = game
         self.image = surf
@@ -46,10 +50,75 @@ class Enemies(pygame.sprite.Sprite):
 
         self.hitbox = self.rect.copy()
 
+        self.direction = direction
+
         self.z = LAYERS['main']
+
+        self.num = 1
     
     def update(self, dt):
-        self.move()
+        self.move(dt)
     
-    def move(self):
-        self.rect.x -= self.game.game.player.rect.x
+    def move(self, dt):
+        # same y axis as player
+        if self.rect.y != self.game.player.rect.y:
+            if self.rect.y > self.game.player.rect.y:
+                self.rect.y -= self.num
+            else:
+                self.rect.y += self.num
+        elif self.num == self.game.player.rect.y:
+            self.rect.y = self.game.player.rect.y
+        
+        # same x axis as player
+        if self.rect.x != self.game.player.rect.x:
+            if self.rect.x > self.game.player.rect.x:
+                self.rect.x -= self.num
+            elif self.rect.x < self.game.player.rect.x:
+                self.rect.x += self.num
+        elif self.rect.x == self.game.player.rect.x:
+            pass
+    
+class Button:
+    def __init__(self,game,x, y, width, height, content, fg, bg):
+        self.game = game
+        #self.font = self.game.my_font # Chooses the default font
+        self.content = content # The programmers text is tunred into the content, this is besically what they want the button to say.
+
+        self.x = x # Yada Yada this is just positioning and width adn height Yada Yada
+        self.y = y
+        self.width = width+32
+        self.height = height 
+
+        self.fg = fg # The foreground colour
+        self.bg = bg # The background olour
+        self.bg2 = self.bg # The secondry background color
+
+        self.image = pygame.Surface([self.width, self.height])
+        self.image.fill(bg)
+        self.rect = self.image.get_rect()
+
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+        self.text = self.game.my_font.render(self.content, True, self.fg)
+        self.text_rect = self.text.get_rect(center = (self.width/2,self.height/2)) # The text will be deiplasyes in the middle of the button
+        self.image.blit(self.text,self.text_rect)
+        
+
+    # This si the buttons function that detects if it has been pressed and returnbd a true or false
+    def is_pressed(self, pos, pressed):
+        if self.rect.collidepoint(pos): # IF the mouse is hovering over the button
+            self.bg2 = 'grey' # The colour of the button will change from whatever it was to grey
+            self.image.fill(self.bg2)
+            self.image.blit(self.text,self.text_rect)
+            if pressed[0]: # If the button is pressed it will then return true
+                # self.game.sfx.play(self.game.asset_loader.click_SFX_2)
+                self.image.fill(self.bg2)
+                self.image.blit(self.text,self.text_rect)
+                #pg.time.delay(250)
+                return True
+            return False
+        self.image.fill(self.bg2)
+        self.image.blit(self.text,self.text_rect)
+        self.bg2 = self.bg
+        return False # If the button was not pressed it 

@@ -19,14 +19,22 @@ class Object_renderer:
         self.width = TILE_SIZE
         self.height = TILE_SIZE
 
+        #-------ENVIRONMENT---------------
         self.snow1 = pygame.image.load('Assets/Graphics/snow1.png').convert_alpha()
 
         self.bush = pygame.image.load('Assets/Graphics/bush_outline.png').convert_alpha()
         self.bush_evil = pygame.image.load('Assets/Graphics/bush_evil.png').convert_alpha()
 
+        self.road = pygame.image.load('Assets/Graphics/road1.png').convert_alpha()
+
+
+        #----subsitute item----------------
         self.sub = pygame.image.load('Assets/Graphics/sub_bush.png').convert_alpha()
 
 
         #-----PLAYER-----
-        self.player_idle = pygame.image.load('Assets/Graphics/motorbike/noarm.png').convert_alpha()
+        self.player_down = pygame.image.load('Assets/Graphics/motorbike/noarm_down.png').convert_alpha()
+        self.player_left = pygame.image.load('Assets/Graphics/motorbike/noarm_left.png').convert_alpha()
+        self.player_right = pygame.image.load('Assets/Graphics/motorbike/noarm_right.png').convert_alpha()
+        self.player_up = pygame.image.load('Assets/Graphics/motorbike/noarm_up.png').convert_alpha()
         self.player_arm = pygame.image.load('Assets/Graphics/motorbike/arm.png').convert_alpha()

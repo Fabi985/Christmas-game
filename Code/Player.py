@@ -1,4 +1,4 @@
-import pygame
+import pygame, math
 from Config import *
 from Asset_renderer import *
 
@@ -18,10 +18,12 @@ class Player(pygame.sprite.Sprite):
         
         #------HITBOX---------
         self.PLAYER_SIZE = 64
-        self.image = self.game.asset_loader.player_idle#pygame.surface.Surface((64,64))# self.animations[self.status][self.frame_index]wa
+        self.image = self.game.asset_loader.player_up#pygame.surface.Surface((64,64))# self.animations[self.status][self.frame_index]wa
         self.player_arm = self.game.asset_loader.player_arm
         
         self.rect = self.image.get_rect(center = pos)
+        self.x,self.y = self.display_surface.get_size()
+        self.arm_rect = (self.x // 2)-9, (self.y // 2)+9
         self.z = LAYERS['player']
 
         #-----MOVEMENT--------------
@@ -33,16 +35,19 @@ class Player(pygame.sprite.Sprite):
 
         #----------HITBOX------------
         self.hitbox = self.rect.copy().inflate(50, 50)
+
     
     def input(self):
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_UP] or keys[pygame.K_w]:
             self.direction.y = -1
-            self.status = self.status.split('_')[0] + ''
+            self.status = 'up'
+            self.image = self.game.asset_loader.player_up
         elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
             self.direction.y = 1
-            self.status = self.status.split('_')[0] + ''
+            self.status = 'down'
+            self.image = self.game.asset_loader.player_down
         else:
             self.direction.y = 0
 
@@ -50,9 +55,11 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             self.direction.x = 1
             self.status = 'right'
+            self.image = self.game.asset_loader.player_right
         elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.direction.x = -1
             self.status = 'left'
+            self.image = self.game.asset_loader.player_left
         else:
             self.direction.x = 0
     
@@ -97,10 +104,29 @@ class Player(pygame.sprite.Sprite):
                             self.hitbox.top = sprite.hitbox.bottom
                         self.rect.centery = self.hitbox.centery
                         self.pos.y = self.hitbox.centery
+    
+    def draw_arm(self):
+        self.player_arm = pygame.transform.scale(self.player_arm, (5*2, 11*4)) 
+        # self.game.display_surface.blit(self.player_arm, self.arm_rect)
+        if self.status == 'down' or self.status == 'down_idle':
+            self.arm_rect = (self.x // 2)-9, (self.y // 2)+9
+        elif self.status == 'up' or self.status == 'up_idle':
+            self.arm_rect = (self.x // 2)-20, (self.y // 2)+20
+        
+        pos = pygame.mouse.get_pos()
+        angle = 360-math.atan2(pos[1]-(self.y // 2)+34,pos[0]-(self.x // 2)-6)*180/math.pi
+        self.rotimage = pygame.transform.rotate(self.player_arm, angle)
+        self.arm_rect = self.rotimage.get_rect(center=((self.x // 2)-6, (self.y // 2)+34))
+        self.game.display_surface.blit(self.rotimage, self.arm_rect) 
 
     def update(self, dt):
-        self.image = pygame.transform.scale(self.image, (self.PLAYER_SIZE, self.PLAYER_SIZE*2))
         self.input()
         self.move(dt)
         self.get_status()
-        # self.animate(dt)
+        if self.status == 'left' or self.status == 'right' or self.status == 'right_idle' or self.status == 'left_idle':
+            self.image = pygame.transform.scale(self.image, (self.PLAYER_SIZE*2, self.PLAYER_SIZE))
+        else:
+            self.image = pygame.transform.scale(self.image, (self.PLAYER_SIZE, self.PLAYER_SIZE*2))
+
+        #draw arm
+        self.draw_arm()

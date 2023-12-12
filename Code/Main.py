@@ -14,12 +14,14 @@ class Main:
     def __init__(self):
         pygame.init()
         pygame.font.init()
-        pygame.display.set_caption("Untitled Game 1")
+        pygame.display.set_caption("Christmas survivor")
 
         self.screen = DISPLAYSURF = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.SCREEN_X, self.SCREEN_Y = DISPLAYSURF.get_size()
         self.clock = pygame.time.Clock()
         self.running = True
+
+        self.display_surface = pygame.display.get_surface()
 
         self.level = Level()
 
@@ -32,6 +34,9 @@ class Main:
                 if event.type == pygame.QUIT or keys[pygame.K_ESCAPE]:
                     pygame.quit()
                     sys.exit
+            
+            self.mouse_pos = pygame.mouse.get_pos()
+            self.mouse_pressed = pygame.mouse.get_pressed()
             
             dt = self.clock.tick() / 1000
             self.level.run(dt)
