@@ -15,3 +15,13 @@ class Generic(pygame.sprite.Sprite):
     # def update(self):
     #     self.image.draw()
     #     print("meant to darw")
+
+class Bush(pygame.sprite.Sprite):
+    def __init__(self, pos, surf, groups):
+        super().__init__(pos, surf, groups)
+        self.hitbox = self.rect.copy()
+
+class Block(Generic):
+    def __init__(self, pos, surf, groups, z):
+        super().__init__(pos, surf, groups, z)
+        self.hitbox = self.rect.copy().inflate(0,0)
