@@ -32,7 +32,7 @@ class Player(pygame.sprite.Sprite):
         self.collision_sprites = collision_sprites
 
         #----------HITBOX------------
-        self.hitbox = self.rect.copy()
+        self.hitbox = self.rect.copy().inflate(50, 50)
     
     def input(self):
         keys = pygame.key.get_pressed()
