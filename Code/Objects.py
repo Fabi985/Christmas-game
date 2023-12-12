@@ -24,4 +24,5 @@ class Bush(pygame.sprite.Sprite):
 class Block(Generic):
     def __init__(self, pos, surf, groups, z):
         super().__init__(pos, surf, groups, z)
-        self.hitbox = self.rect.copy().inflate(0,0)
+        self.hitbox = self.rect.copy().inflate(-10, 0)
+        self.image = pygame.transform.scale(self.image, (TILE_SIZE *2, TILE_SIZE*2))

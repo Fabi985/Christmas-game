@@ -34,7 +34,7 @@ class Level:
                     groups = self.all_sprites,
                     z_layer = LAYERS['ground'])
                 if column == 2:
-                    Block((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.sub, [self.all_sprites, self.collision_sprites], z = LAYERS['main'])
+                    Block((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.bush, [self.all_sprites, self.collision_sprites], z = LAYERS['bush'])
                 if column == 'p':
                     self.player = Player((j*TILE_SIZE, i*TILE_SIZE), self.all_sprites, self.collision_sprites)
                     Generic(
@@ -42,7 +42,13 @@ class Level:
                     surf = self.asset_loader.snow1,
                     groups = self.all_sprites,
                     z_layer = LAYERS['ground'])
-                    pass
+                if column == 3:
+                    Generic(
+                    pos = (j*TILE_SIZE, i*TILE_SIZE), 
+                    surf = self.asset_loader.snow1,
+                    groups = self.all_sprites,
+                    z_layer = LAYERS['ground'])
+                    Block((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.bush, [self.all_sprites, self.collision_sprites], z = LAYERS['bush'])
 
     def run(self, dt):
         self.display_surface.fill('black')

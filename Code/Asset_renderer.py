@@ -21,4 +21,6 @@ class Object_renderer:
 
         self.snow1 = pygame.image.load('Assets/Graphics/snow1.png').convert_alpha()
 
+        self.bush = pygame.image.load('Assets/Graphics/bush_outline.png').convert_alpha()
+
         self.sub = pygame.image.load('Assets/Graphics/sub_bush.png').convert_alpha()
