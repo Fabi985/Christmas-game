@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         #-----MOVEMENT--------------
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
-        self.speed = 170
+        self.speed = 350
 
         #----------HITBOX------------
         self.hitbox = self.rect.copy().inflate(12 * 2,12 * 2)
@@ -35,7 +35,7 @@ class Player(pygame.sprite.Sprite):
 
         if keys[pygame.K_UP] or keys[pygame.K_w]:
             self.direction.y = -1
-            self.status = self.status.split('_')[0] + ''dwa
+            self.status = self.status.split('_')[0] + ''
         elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
             self.direction.y = 1
             self.status = self.status.split('_')[0] + ''

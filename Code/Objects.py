@@ -7,6 +7,11 @@ class Generic(pygame.sprite.Sprite):
         super().__init__(groups)
 
         self.image = surf
-        self.image = pygame.transform.scale2x(self.image)
+        # self.image = pygame.transform.scale2x(self.image)
+        self.image = pygame.transform.scale(self.image, (TILE_SIZE, TILE_SIZE))
         self.rect = self.image.get_rect(topleft = pos)
         self.z = z_layer
+    
+    # def update(self):
+    #     self.image.draw()
+    #     print("meant to darw")

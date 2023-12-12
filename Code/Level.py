@@ -3,11 +3,15 @@ from Config import *
 from Overlay import *
 from Player import *
 from Objects import *
+from Asset_renderer import *
 
 class Level:
     def __init__(self):
         # gets the display surface
         self.display_surface = pygame.display.get_surface()
+
+        #set up the asset loader
+        self.asset_loader = Object_renderer(self)
 
         # sprite groups
         self.all_sprites = Camera_group()
@@ -16,7 +20,9 @@ class Level:
         self.overlay = Overlay()
     
     def setup(self):
-        self.player = Player((0,0), self.all_sprites)
+        self.player = Player((950,550), self.all_sprites)
+
+        self.tilemap = self.create_tilemap()
 
 
     def create_tilemap(self):
@@ -24,10 +30,18 @@ class Level:
             for j, column in enumerate(row):
                 if column == 1:
                     Generic(
-                    pos = (0,0), 
-                    surf = pygame.image.load('').convert_alpha(),
+                    pos = (j*TILE_SIZE, i*TILE_SIZE), 
+                    surf = self.asset_loader.snow1,
                     groups = self.all_sprites,
                     z_layer = LAYERS['ground'])
+                # if column == 2:
+                #     Generic(
+                #     pos = (j*TILE_SIZE, i*TILE_SIZE), 
+                #     surf = pygame.image.load('Assets/Graphics/tree1.png').convert_alpha(),
+                #     groups = self.all_sprites,
+                #     z_layer = LAYERS['ground'])
+                if column == 'p':
+                    pass
 
     def run(self, dt):
         self.display_surface.fill('black')
@@ -45,8 +59,8 @@ class Camera_group(pygame.sprite.Group):
     
     def custom_draw(self, player):
         x,y = self.display_surface.get_size()
-        # self.offset.x = player.rect.centerx - x / 2
-        # self.offset.y = player.rect.centery - y / 2
+        self.offset.x = player.rect.centerx - x / 2
+        self.offset.y = player.rect.centery - y / 2
 
         for layer in LAYERS.values():
             for sprite in self.sprites():
@@ -56,8 +70,8 @@ class Camera_group(pygame.sprite.Group):
                     self.display_surface.blit(sprite.image, offset_rect)
 
                     # displays hitboxes
-                    if sprite == player:
-                        pygame.draw.rect(self.display_surface,'red',offset_rect,5)
-                        hitbox_rect = player.hitbox.copy()
-                        hitbox_rect.center = offset_rect.center
-                        pygame.draw.rect(self.display_surface,'green',hitbox_rect,5)
+                    # if sprite == player:
+                    #     pygame.draw.rect(self.display_surface,'red',offset_rect,5)
+                    #     hitbox_rect = player.hitbox.copy()
+                    #     hitbox_rect.center = offset_rect.center
+                    #     pygame.draw.rect(self.display_surface,'green',hitbox_rect,5)
