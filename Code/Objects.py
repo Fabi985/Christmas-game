@@ -33,20 +33,23 @@ class Bush(Generic):
     
     def update(self, dt):
         if self.game.time == 10:
-            Enemies(self.pos, pygame.surface.Surface((64,64)), self.game.all_sprites)
+            Enemies(self.pos, pygame.surface.Surface((64,64)), self.game.all_sprites, self)
     
 
 class Enemies(pygame.sprite.Sprite):
-    def __init__(self, pos, surf, groups, z_layer = LAYERS['main']):
+    def __init__(self, pos, surf, groups, game):
         super().__init__(groups)
-
+        self.game = game
         self.image = surf
         self.image.fill('red')
         self.rect = self.image.get_rect(center = pos)
 
         self.hitbox = self.rect.copy()
 
-        self.z = z_layer
+        self.z = LAYERS['main']
     
     def update(self, dt):
-        pass
+        self.move()
+    
+    def move(self):
+        self.rect.x -= self.game.game.player.rect.x
