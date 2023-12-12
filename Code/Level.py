@@ -15,13 +15,12 @@ class Level:
 
         # sprite groups
         self.all_sprites = Camera_group()
+        self.collision_sprites = pygame.sprite.Group()
 
         self.setup()
         self.overlay = Overlay()
     
     def setup(self):
-        self.player = Player((950,550), self.all_sprites)
-
         self.tilemap = self.create_tilemap()
 
 
@@ -34,13 +33,15 @@ class Level:
                     surf = self.asset_loader.snow1,
                     groups = self.all_sprites,
                     z_layer = LAYERS['ground'])
-                # if column == 2:
-                #     Generic(
-                #     pos = (j*TILE_SIZE, i*TILE_SIZE), 
-                #     surf = pygame.image.load('Assets/Graphics/tree1.png').convert_alpha(),
-                #     groups = self.all_sprites,
-                #     z_layer = LAYERS['ground'])
+                if column == 2:
+                    Block((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.sub, [self.all_sprites, self.collision_sprites], z = LAYERS['main'])
                 if column == 'p':
+                    self.player = Player((j*TILE_SIZE, i*TILE_SIZE), self.all_sprites, self.collision_sprites)
+                    Generic(
+                    pos = (j*TILE_SIZE, i*TILE_SIZE), 
+                    surf = self.asset_loader.snow1,
+                    groups = self.all_sprites,
+                    z_layer = LAYERS['ground'])
                     pass
 
     def run(self, dt):

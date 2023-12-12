@@ -20,3 +20,5 @@ class Object_renderer:
         self.height = TILE_SIZE
 
         self.snow1 = pygame.image.load('Assets/Graphics/snow1.png').convert_alpha()
+
+        self.sub = pygame.image.load('Assets/Graphics/sub_bush.png').convert_alpha()

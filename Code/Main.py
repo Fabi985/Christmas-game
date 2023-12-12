@@ -7,6 +7,9 @@ from Config import  *
 from Asset_renderer import *
 from Level import *
 
+#TODO: TEXT BOXES
+#TODO: ENEMIES
+
 class Main:
     def __init__(self):
         pygame.init()
