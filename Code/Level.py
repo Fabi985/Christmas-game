@@ -18,6 +18,8 @@ class Level:
 
         #set up the asset loader
         self.asset_loader = Object_renderer(self)
+        self.music = pygame.mixer.Channel(1)
+        self.music.set_volume(5)
 
         # sprite groups
         self.all_sprites = Camera_group()
@@ -31,10 +33,14 @@ class Level:
         self.overlay = Overlay(self)
 
         self.time = 0
+        self.timer = 900
 
         self.bullets = []
 
+        self.start_ticks=pygame.time.get_ticks()
+
     def story(self):
+        self.music.play(self.asset_loader.music1, -1)
         story = True
         self.talk = 0
         self.talk1 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"Hello! 'globmolg' you arnt dead just yet!",'white','black' )
@@ -205,16 +211,16 @@ class Level:
 
     def run(self, dt):
         self.time += 1
+        self.seconds = (pygame.time.get_ticks()-self.start_ticks)/1000 #calculate how many seconds
+        if self.seconds > self.timer: # if more than 10 seconds close the game
+            print("win")
+        elif self.seconds < self.timer:
+            self.timer -= 1
         self.check_player_health()
         self.display_surface.fill('black')
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
-
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                self.bullets.append(Bullet(self.player.pos.x, self.player.pos.y, game=self))
-        
-        self.bullet_stuff()
+    
 
         self.overlay.display()
     
@@ -247,8 +253,8 @@ class Camera_group(pygame.sprite.Group):
                     self.display_surface.blit(sprite.image, offset_rect)
 
                     # displays hitboxes
-                    if sprite == player:
-                        pygame.draw.rect(self.display_surface,'red',offset_rect,5)
-                        hitbox_rect = player.hitbox.copy()
-                        hitbox_rect.center = offset_rect.center
-                        pygame.draw.rect(self.display_surface,'green',hitbox_rect,5)
+                    # if sprite == player:
+                    #     pygame.draw.rect(self.display_surface,'red',offset_rect,5)
+                    #     hitbox_rect = player.hitbox.copy()
+                    #     hitbox_rect.center = offset_rect.center
+                    #     pygame.draw.rect(self.display_surface,'green',hitbox_rect,5)

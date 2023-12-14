@@ -56,7 +56,7 @@ class Bush(Generic):
                 Enemies(self.pos, self.game.asset_loader.snowmen, [self.game.all_sprites, self.game.bullet_collision_sprites], self.game, self.direction, 'short')
             else:
                 Enemies(self.pos, self.game.asset_loader.ginger, [self.game.all_sprites, self.game.bullet_collision_sprites], self.game, self.direction, 'short')
-            self.spawn_cooldown = 300
+            self.spawn_cooldown = 1000
         elif self.spawn_cooldown > 0:
             self.spawn_cooldown -= 1
 

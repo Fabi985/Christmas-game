@@ -61,3 +61,8 @@ class Object_renderer:
         self.player_right = pygame.image.load('Assets/Graphics/motorbike/noarm_right.png').convert_alpha()
         self.player_up = pygame.image.load('Assets/Graphics/motorbike/noarm_up.png').convert_alpha()
         self.player_arm = pygame.image.load('Assets/Graphics/motorbike/arm.png').convert_alpha()
+
+
+        pygame.mixer.pre_init(44100, -16, 2, 512)
+        pygame.mixer.init()
+        self.music1 = pygame.mixer.Sound('Assets/Music/y2mate.is - Kavinsky Nightcall 8 BIT Music By FRANKJAVCEE -dUpP80Y8YIQ-192k-1702564096-[AudioTrimmer.com]-[AudioTrimmer.com] 2.wav')

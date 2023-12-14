@@ -1,6 +1,7 @@
 import pygame, math
 from Config import *
 from Asset_renderer import *
+from Objects import Bullet
 
 
 class Player(pygame.sprite.Sprite):
@@ -35,6 +36,11 @@ class Player(pygame.sprite.Sprite):
 
         #----------HITBOX------------
         self.hitbox = self.rect.copy().inflate(50, 50)
+
+
+        #-----auto attack------
+        self.shooting_cooldown = 0
+        self.boolets = []
 
     
     def input(self):
@@ -118,6 +124,16 @@ class Player(pygame.sprite.Sprite):
         self.rotimage = pygame.transform.rotate(self.player_arm, angle)
         self.arm_rect = self.rotimage.get_rect(center=((self.x // 2)-6, (self.y // 2)+34))
         self.game.display_surface.blit(self.rotimage, self.arm_rect) 
+    
+    def boolets(self):
+        if self.shooting_cooldown == 0:
+            self.shoot()
+            self.shooting_cooldown = 300
+        elif self.shooting_cooldown > 0:
+            self.shooting_cooldown -= 1
+    
+    def shoot(self):
+        self.boolets.append(Bullet(self.rect.x, self.rect.y, self.game))
 
     def update(self, dt):
         self.input()

@@ -21,5 +21,8 @@ class Overlay:
         self.display_surface.blit(self.game.asset_loader.health_bar, (x // 28, y // 16))
         self.display_surface.blit(self.game.asset_loader.heart, (x // 13, y // 10))
         # self.display_surface.blit(player_health, (x // 10, y // 7))
+
+        #timer
+        pygame.draw.rect(self.display_surface,'orange',(0, 0, (self.game.timer* 7) , 20 ))
         
         pass
