@@ -34,6 +34,8 @@ class Bush(Generic):
         self.image = pygame.transform.scale(self.image, (TILE_SIZE *2, TILE_SIZE*2))
 
         self.direction = direction
+
+        self.spawn_cooldown = 0
     
     def update(self, dt):
         if self.game.time == 10:
@@ -48,6 +50,15 @@ class Bush(Generic):
                     Enemies(self.pos, self.game.asset_loader.snowmen2, [self.game.all_sprites, self.game.bullet_collision_sprites], self.game, self.direction, 'long')
                 else:
                     Enemies(self.pos, self.game.asset_loader.snowmen3, [self.game.all_sprites, self.game.bullet_collision_sprites], self.game, self.direction, 'long')
+            
+        if self.spawn_cooldown == 0:
+            if random.randint(1, 2) == 1:
+                Enemies(self.pos, self.game.asset_loader.snowmen, [self.game.all_sprites, self.game.bullet_collision_sprites], self.game, self.direction, 'short')
+            else:
+                Enemies(self.pos, self.game.asset_loader.ginger, [self.game.all_sprites, self.game.bullet_collision_sprites], self.game, self.direction, 'short')
+            self.spawn_cooldown = 300
+        elif self.spawn_cooldown > 0:
+            self.spawn_cooldown -= 1
 
 class Enemies(pygame.sprite.Sprite):
     def __init__(self, pos, surf, groups, game, direction, type):
@@ -109,11 +120,11 @@ class Enemies(pygame.sprite.Sprite):
             if self.rect.x == self.game.player.rect.x:
                 if self.rect.y == self.game.player.rect.y:
                     if self.attack_cooldown == 0:
-                        self.game.player.health -= 0.5
+                        self.game.player.health -= 1
                         self.attack_cooldown = 300
                     elif self.attack_cooldown > 0:
                         self.attack_cooldown -= 1
-                        
+
         elif self.type == 'long':
             if self.rect.x != self.game.player.rect.x:
                 if self.rect.x > self.game.player.rect.x:
