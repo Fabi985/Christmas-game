@@ -80,12 +80,12 @@ class Level:
                 num -=1
             
             if self.yug_float == 'up':
-                self.y_axis -= 0.3
+                self.y_axis -= 0.03
                 self.floating += 1
                 if self.floating == 200:
                     self.yug_float = 'down'
             elif self.yug_float == 'down':
-                self.y_axis += 0.3
+                self.y_axis += 0.03
                 self.floating -= 1
                 if self.floating == 0:
                     self.yug_float = 'up'

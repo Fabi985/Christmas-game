@@ -39,9 +39,9 @@ class Bush(Generic):
         if self.game.time == 10:
             ran = random.randint(1, 2)
             if ran == 1:
-                Enemies(self.pos, self.game.asset_loader.snowmen, [self.game.all_sprites, self.game.collision_sprites], self.game, self.direction, 'short')
+                Enemies(self.pos, self.game.asset_loader.snowmen, [self.game.all_sprites], self.game, self.direction, 'short')
             else:
-                Enemies(self.pos, self.game.asset_loader.snowmen2, [self.game.all_sprites, self.game.collision_sprites], self.game, self.direction, 'long')
+                Enemies(self.pos, self.game.asset_loader.snowmen2, [self.game.all_sprites], self.game, self.direction, 'long')
     
 
 class Enemies(pygame.sprite.Sprite):
@@ -61,6 +61,10 @@ class Enemies(pygame.sprite.Sprite):
 
         self.attack_cooldown = 0
         self.type = type
+
+        self.direction = pygame.math.Vector2()
+        self.pos = pygame.math.Vector2(self.rect.center)
+        self.speed = 400
         
     
     def update(self, dt):
@@ -71,25 +75,38 @@ class Enemies(pygame.sprite.Sprite):
         if self.type == 'short':
             if self.rect.y != self.game.player.rect.y:
                 if self.rect.y > self.game.player.rect.y:
-                    self.rect.y -= self.num
+                    self.direction.y = -1
                 else:
-                    self.rect.y += self.num
+                    self.direction.y = 1
             elif self.num == self.game.player.rect.y:
-                self.rect.y = self.game.player.rect.y
+                self.direction.y = 0
             
-            # same x axis as player
+
+            if self.direction.magnitude() > 0:
+                self.direction = self.direction.normalize()
+            
+            self.pos.y += self.direction.y * self.speed * dt
+            self.hitbox.centery = round(self.pos.y)
+            self.rect.centery = self.hitbox.centery
+            #self.collision('vertical')
+            
+            # # same x axis as player
             if self.rect.x != self.game.player.rect.x:
                 if self.rect.x > self.game.player.rect.x:
-                    self.rect.x -= self.num
+                    self.direction.x = -1
                 elif self.rect.x < self.game.player.rect.x:
-                    self.rect.x += self.num
-            elif self.rect.x == self.game.player.rect.x:
-                if self.rect.y == self.game.player.rect.y:
-                    if self.attack_cooldown == 0:
-                        self.game.player.health -= 0.5
-                        self.attack_cooldown = 300
-                    elif self.attack_cooldown > 0:
-                        self.attack_cooldown -= 1
+                    self.direction.x = 1
+            
+            self.pos.x += self.direction.x * self.speed * dt
+            self.hitbox.centerx = round(self.pos.x)
+            self.rect.centerx = self.hitbox.centerx
+            # elif self.rect.x == self.game.player.rect.x:
+            #     if self.rect.y == self.game.player.rect.y:
+            #         if self.attack_cooldown == 0:
+            #             self.game.player.health -= 0.5
+            #             self.attack_cooldown = 300
+            #         elif self.attack_cooldown > 0:
+            #             self.attack_cooldown -= 1
         elif self.type == 'long':
             if self.rect.x != self.game.player.rect.x:
                 if self.rect.x > self.game.player.rect.x:
