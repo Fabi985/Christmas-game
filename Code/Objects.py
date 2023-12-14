@@ -1,5 +1,5 @@
 # This is ewhere all the objects will be held
-import pygame
+import pygame, random
 from Config import *
 
 class Generic(pygame.sprite.Sprite):
@@ -37,11 +37,15 @@ class Bush(Generic):
     
     def update(self, dt):
         if self.game.time == 10:
-            Enemies(self.pos, self.game.asset_loader.snowmen, [self.game.all_sprites, self.game.collision_sprites], self.game, self.direction)
+            ran = random.randint(1, 2)
+            if ran == 1:
+                Enemies(self.pos, self.game.asset_loader.snowmen, [self.game.all_sprites, self.game.collision_sprites], self.game, self.direction, 'short')
+            else:
+                Enemies(self.pos, self.game.asset_loader.snowmen2, [self.game.all_sprites, self.game.collision_sprites], self.game, self.direction, 'long')
     
 
 class Enemies(pygame.sprite.Sprite):
-    def __init__(self, pos, surf, groups, game, direction):
+    def __init__(self, pos, surf, groups, game, direction, type):
         super().__init__(groups)
         self.game = game
         self.image = surf
@@ -56,33 +60,50 @@ class Enemies(pygame.sprite.Sprite):
         self.num = 1   
 
         self.attack_cooldown = 0
+        self.type = type
+        
     
     def update(self, dt):
         self.move(dt)
     
     def move(self, dt):
         # same y axis as player
-        if self.rect.y != self.game.player.rect.y:
-            if self.rect.y > self.game.player.rect.y:
-                self.rect.y -= self.num
-            else:
-                self.rect.y += self.num
-        elif self.num == self.game.player.rect.y:
-            self.rect.y = self.game.player.rect.y
-        
-        # same x axis as player
-        if self.rect.x != self.game.player.rect.x:
-            if self.rect.x > self.game.player.rect.x:
-                self.rect.x -= self.num
-            elif self.rect.x < self.game.player.rect.x:
-                self.rect.x += self.num
-        elif self.rect.x == self.game.player.rect.x:
-            if self.rect.y == self.game.player.rect.y:
-                if self.attack_cooldown == 0:
-                    self.game.player.health -= 0.5
-                    self.attack_cooldown = 300
-                elif self.attack_cooldown > 0:
-                    self.attack_cooldown -= 1
+        if self.type == 'short':
+            if self.rect.y != self.game.player.rect.y:
+                if self.rect.y > self.game.player.rect.y:
+                    self.rect.y -= self.num
+                else:
+                    self.rect.y += self.num
+            elif self.num == self.game.player.rect.y:
+                self.rect.y = self.game.player.rect.y
+            
+            # same x axis as player
+            if self.rect.x != self.game.player.rect.x:
+                if self.rect.x > self.game.player.rect.x:
+                    self.rect.x -= self.num
+                elif self.rect.x < self.game.player.rect.x:
+                    self.rect.x += self.num
+            elif self.rect.x == self.game.player.rect.x:
+                if self.rect.y == self.game.player.rect.y:
+                    if self.attack_cooldown == 0:
+                        self.game.player.health -= 0.5
+                        self.attack_cooldown = 300
+                    elif self.attack_cooldown > 0:
+                        self.attack_cooldown -= 1
+        elif self.type == 'long':
+            if self.rect.x != self.game.player.rect.x:
+                if self.rect.x > self.game.player.rect.x:
+                    self.rect.x -= self.num
+                elif self.rect.x < self.game.player.rect.x:
+                    self.rect.x += self.num
+            elif self.rect.x == self.game.player.rect.x:
+                if self.rect.y == self.game.player.rect.y:
+                    if self.attack_cooldown == 0:
+                        self.game.player.health -= 0.5
+                        self.attack_cooldown = 300
+                    elif self.attack_cooldown > 0:
+                        self.attack_cooldown -= 1
+            
     
 class Button:
     def __init__(self,game,x, y, width, height, content, fg, bg):

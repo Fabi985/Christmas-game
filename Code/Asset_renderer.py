@@ -46,6 +46,9 @@ class Object_renderer:
         self.snowmen = pygame.image.load('Assets/Graphics/enemies/mr_stabby.png').convert_alpha()
         self.snowmen = pygame.transform.scale(self.snowmen, (TILE_SIZE, TILE_SIZE))
 
+        self.snowmen2 = pygame.image.load('Assets/Graphics/enemies/gangsta snowman.png').convert_alpha()
+        self.snowmen2 = pygame.transform.scale(self.snowmen2, (TILE_SIZE, TILE_SIZE))
+
         #-----PLAYER-----
         self.player_down = pygame.image.load('Assets/Graphics/motorbike/noarm_down.png').convert_alpha()
         self.player_left = pygame.image.load('Assets/Graphics/motorbike/noarm_left.png').convert_alpha()
