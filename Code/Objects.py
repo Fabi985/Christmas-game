@@ -1,5 +1,5 @@
 # This is ewhere all the objects will be held
-import pygame, random
+import pygame, random, math
 from Config import *
 
 class Generic(pygame.sprite.Sprite):
@@ -39,10 +39,15 @@ class Bush(Generic):
         if self.game.time == 10:
             ran = random.randint(1, 2)
             if ran == 1:
-                Enemies(self.pos, self.game.asset_loader.snowmen, [self.game.all_sprites], self.game, self.direction, 'short')
+                if random.randint(1, 2) == 1:
+                    Enemies(self.pos, self.game.asset_loader.snowmen, [self.game.all_sprites, self.game.bullet_collision_sprites], self.game, self.direction, 'short')
+                else:
+                    Enemies(self.pos, self.game.asset_loader.ginger, [self.game.all_sprites, self.game.bullet_collision_sprites], self.game, self.direction, 'short')
             else:
-                Enemies(self.pos, self.game.asset_loader.snowmen2, [self.game.all_sprites], self.game, self.direction, 'long')
-    
+                if random.randint(1, 2) == 1:
+                    Enemies(self.pos, self.game.asset_loader.snowmen2, [self.game.all_sprites, self.game.bullet_collision_sprites], self.game, self.direction, 'long')
+                else:
+                    Enemies(self.pos, self.game.asset_loader.snowmen3, [self.game.all_sprites, self.game.bullet_collision_sprites], self.game, self.direction, 'long')
 
 class Enemies(pygame.sprite.Sprite):
     def __init__(self, pos, surf, groups, game, direction, type):
@@ -64,7 +69,7 @@ class Enemies(pygame.sprite.Sprite):
 
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
-        self.speed = 400
+        self.speed = random.randint(150, 250)
         
     
     def update(self, dt):
@@ -100,13 +105,15 @@ class Enemies(pygame.sprite.Sprite):
             self.pos.x += self.direction.x * self.speed * dt
             self.hitbox.centerx = round(self.pos.x)
             self.rect.centerx = self.hitbox.centerx
-            # elif self.rect.x == self.game.player.rect.x:
-            #     if self.rect.y == self.game.player.rect.y:
-            #         if self.attack_cooldown == 0:
-            #             self.game.player.health -= 0.5
-            #             self.attack_cooldown = 300
-            #         elif self.attack_cooldown > 0:
-            #             self.attack_cooldown -= 1
+
+            if self.rect.x == self.game.player.rect.x:
+                if self.rect.y == self.game.player.rect.y:
+                    if self.attack_cooldown == 0:
+                        self.game.player.health -= 0.5
+                        self.attack_cooldown = 300
+                    elif self.attack_cooldown > 0:
+                        self.attack_cooldown -= 1
+                        
         elif self.type == 'long':
             if self.rect.x != self.game.player.rect.x:
                 if self.rect.x > self.game.player.rect.x:
@@ -120,7 +127,52 @@ class Enemies(pygame.sprite.Sprite):
                         self.attack_cooldown = 300
                     elif self.attack_cooldown > 0:
                         self.attack_cooldown -= 1
+
+    def bullet_collision(self, direction):
+        for sprite in self.bullet_collision_sprites.sprites():
+            if hasattr(sprite, 'hitbox'):
+                if sprite.hitbox.colliderect(self.hitbox):
+                    if direction == 'horizontal':
+                        if self.direction.x > 0: #moving right
+                            self.hitbox.right = sprite.hitbox.left
+                        elif self.direction.x < 0:#moving left
+                            self.hitbox.left = sprite.hitbox.right
+                        self.rect.centerx = self.hitbox.centerx
+                        self.pos.x = self.hitbox.centerx
+                    
+                    if direction == 'vertical':
+                        if self.direction.y > 0: # moving down
+                            self.hitbox.bottom = sprite.hitbox.top
+                        elif self.direction.y < 0:
+                            self.hitbox.top = sprite.hitbox.bottom
+                        self.rect.centery = self.hitbox.centery
+                        self.pos.y = self.hitbox.centery
             
+class Bullet:
+    def __init__(self, x, y, game):
+        self.game = game
+        self.pos = self.game.player.rect
+        mx, my = pygame.mouse.get_pos()
+        self.dir = (mx - x, my - y)
+        length = math.hypot(*self.dir)
+        if length == 0.0:
+            self.dir = (0, -1)
+        else:
+            self.dir = (self.dir[0]/length, self.dir[1]/length)
+        angle = math.degrees(math.atan2(-self.dir[1], self.dir[0]))
+
+        self.bullet = pygame.Surface((7, 2)).convert_alpha()
+        self.bullet.fill((255, 255, 255))
+        self.bullet = pygame.transform.rotate(self.bullet, angle)
+        self.speed = 2
+
+    def update(self):  
+        self.pos = (self.pos[0]+self.dir[0]*self.speed, 
+                    self.pos[1]+self.dir[1]*self.speed)
+
+    def draw(self, surf):
+        bullet_rect = self.bullet.get_rect(center = self.pos)
+        self.game.display_surface.blit(self.bullet, bullet_rect)  
     
 class Button:
     def __init__(self,game,x, y, width, height, content, fg, bg):

@@ -22,6 +22,7 @@ class Level:
         # sprite groups
         self.all_sprites = Camera_group()
         self.collision_sprites = pygame.sprite.Group()
+        self.bullet_collision_sprites = pygame.sprite.Group()
 
         self.main_menu()
         self.story()
@@ -30,6 +31,8 @@ class Level:
         self.overlay = Overlay(self)
 
         self.time = 0
+
+        self.bullets = []
 
     def story(self):
         story = True
@@ -207,7 +210,22 @@ class Level:
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
 
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.bullets.append(Bullet(self.player.pos.x, self.player.pos.y, game=self))
+        
+        self.bullet_stuff()
+
         self.overlay.display()
+    
+    def bullet_stuff(self):
+        for bullet in self.bullets[:]:
+            bullet.update()
+            if not self.display_surface.get_rect().collidepoint(bullet.pos):
+                self.bullets.remove(bullet)
+        
+        for bullet in self.bullets:
+            bullet.draw(self.display_surface)
 
 class Camera_group(pygame.sprite.Group):
     def __init__(self):
@@ -229,11 +247,8 @@ class Camera_group(pygame.sprite.Group):
                     self.display_surface.blit(sprite.image, offset_rect)
 
                     # displays hitboxes
-                    # if sprite == player:
-                        # pygame.draw.rect(self.display_surface,'red',offset_rect,5)
-                        # hitbox_rect = player.hitbox.copy()
-                        # hitbox_rect.center = offset_rect.center
-                        # pygame.draw.rect(self.display_surface,'green',hitbox_rect,5)
-                        # hitbox_arm_rect = player.arm_rect.copy()
-                        # hitbox_arm_rect.center = offset_rect.center
-                        # pygame.draw.rect(self.display_surface,'yellow',hitbox_arm_rect,5)
+                    if sprite == player:
+                        pygame.draw.rect(self.display_surface,'red',offset_rect,5)
+                        hitbox_rect = player.hitbox.copy()
+                        hitbox_rect.center = offset_rect.center
+                        pygame.draw.rect(self.display_surface,'green',hitbox_rect,5)
