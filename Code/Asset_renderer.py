@@ -31,6 +31,20 @@ class Object_renderer:
         #----subsitute item----------------
         self.sub = pygame.image.load('Assets/Graphics/sub_bush.png').convert_alpha()
 
+        #--------PLAYER HEALTH----------
+        self.heart = pygame.image.load('Assets/Graphics/heart_done.png').convert_alpha()
+        self.heart = pygame.transform.scale(self.heart, (128, 128))
+
+        self.health_bar = pygame.image.load('Assets/Graphics/health_bar.png').convert_alpha()
+        self.health_bar = pygame.transform.scale(self.health_bar, (300*2, 215))
+
+        #----gob----
+        self.gob = pygame.image.load('Assets/Graphics/christmas yug.png').convert_alpha()
+        self.gob = pygame.transform.scale(self.gob, (320, 320))
+    
+        #------enemies----
+        self.snowmen = pygame.image.load('Assets/Graphics/enemies/mr_stabby.png').convert_alpha()
+        self.snowmen = pygame.transform.scale(self.snowmen, (TILE_SIZE, TILE_SIZE))
 
         #-----PLAYER-----
         self.player_down = pygame.image.load('Assets/Graphics/motorbike/noarm_down.png').convert_alpha()

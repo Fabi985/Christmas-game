@@ -37,7 +37,7 @@ class Bush(Generic):
     
     def update(self, dt):
         if self.game.time == 10:
-            Enemies(self.pos, pygame.surface.Surface((64,64)), [self.game.all_sprites, self.game.collision_sprites], self.game, self.direction)
+            Enemies(self.pos, self.game.asset_loader.snowmen, [self.game.all_sprites, self.game.collision_sprites], self.game, self.direction)
     
 
 class Enemies(pygame.sprite.Sprite):
@@ -45,7 +45,6 @@ class Enemies(pygame.sprite.Sprite):
         super().__init__(groups)
         self.game = game
         self.image = surf
-        self.image.fill('red')
         self.rect = self.image.get_rect(center = pos)
 
         self.hitbox = self.rect.copy()
@@ -54,7 +53,7 @@ class Enemies(pygame.sprite.Sprite):
 
         self.z = LAYERS['main']
 
-        self.num = 1
+        self.num = 1   
 
         self.attack_cooldown = 0
     

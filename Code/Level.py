@@ -36,9 +36,15 @@ class Level:
         self.talk = 0
         self.talk1 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"Hello! 'globmolg' you arnt dead just yet!",'white','black' )
         self.talk2 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"You went off track when you slipped on some ice!",'white','black' )
+        self.talk3 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"Use [WASD] to move and [LMB] to shoot/ attack!",'white','black' )
         click_anywhere = self.my_font.render('click anywhere to continue!', True, 'white')
 
         num = 150
+
+        self.bob = -100
+        self.x_axis, self.y_axis = self.SCREEN_X // 3, self.SCREEN_Y //12#self.SCREEN_X // 3, self.SCREEN_Y //10
+        self.floating = 0
+        self.yug_float = 'up'
 
         while story:
             keys = pygame.key.get_pressed()
@@ -61,11 +67,31 @@ class Level:
                     if self.talk2.is_pressed(self.mouse_pos, self.mouse_pressed):
                         self.talk += 1
                         num = 150
-                        story = False
                 
                     self.display_surface.blit(self.talk2.image, self.talk2.rect)
+                elif self.talk == 2:
+                    if self.talk3.is_pressed(self.mouse_pos, self.mouse_pressed):
+                        self.talk += 1
+                        num = 150
+                        story = False
+                
+                    self.display_surface.blit(self.talk3.image, self.talk3.rect)
             elif num > 0:
                 num -=1
+            
+            if self.yug_float == 'up':
+                self.y_axis -= 0.3
+                self.floating += 1
+                if self.floating == 200:
+                    self.yug_float = 'down'
+            elif self.yug_float == 'down':
+                self.y_axis += 0.3
+                self.floating -= 1
+                if self.floating == 0:
+                    self.yug_float = 'up'
+
+            self.display_surface.blit(self.asset_loader.gob, (self.SCREEN_X // 3, self.SCREEN_Y //10 + self.y_axis))
+
 
             self.display_surface.blit(click_anywhere, (self.SCREEN_X // 4, self.SCREEN_Y - 200))
 
@@ -142,9 +168,41 @@ class Level:
                     surf = self.asset_loader.road,
                     groups = self.all_sprites,
                     z_layer = LAYERS['ground'])
+    
+    def check_player_health(self):
+        if self.player.health <= 0:
+            self.dead()
+    
+    def dead(self):
+        dead_menu = True
+        title = self.title_font.render('you died!', True, 'black')
+        quit_button = Button(self,(self.SCREEN_X // 6),(self.SCREEN_Y // 2),280,60,"Quit Game",'white','black' )
+        play_button = Button(self,(self.SCREEN_X // 6),(self.SCREEN_Y // 3),280,60,"Back to menu",'white','black' )
+        while dead_menu:
+            keys = pygame.key.get_pressed()
+            self.mouse_pos = pygame.mouse.get_pos()
+            self.mouse_pressed = pygame.mouse.get_pressed()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or keys[pygame.K_ESCAPE]:
+                    pygame.quit()
+                    sys.exit
+            self.display_surface.fill('red')
+
+            if quit_button.is_pressed(self.mouse_pos, self.mouse_pressed): # Checks to see if the player has pressed on the button
+                    pygame.quit()
+                    sys.exit
+            
+            if play_button.is_pressed(self.mouse_pos, self.mouse_pressed): # Checks to see if the player has pressed on the button
+                    dead_menu = False
+
+            self.display_surface.blit(quit_button.image, quit_button.rect)
+            self.display_surface.blit(play_button.image, play_button.rect)
+            self.display_surface.blit(title, (self.SCREEN_X // 6, self.SCREEN_Y // 4))
+            pygame.display.update()
 
     def run(self, dt):
         self.time += 1
+        self.check_player_health()
         self.display_surface.fill('black')
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
