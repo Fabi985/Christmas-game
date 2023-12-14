@@ -55,6 +55,8 @@ class Enemies(pygame.sprite.Sprite):
         self.z = LAYERS['main']
 
         self.num = 1
+
+        self.attack_cooldown = 0
     
     def update(self, dt):
         self.move(dt)
@@ -76,7 +78,12 @@ class Enemies(pygame.sprite.Sprite):
             elif self.rect.x < self.game.player.rect.x:
                 self.rect.x += self.num
         elif self.rect.x == self.game.player.rect.x:
-            pass
+            if self.rect.y == self.game.player.rect.y:
+                if self.attack_cooldown == 0:
+                    self.game.player.health -= 0.5
+                    self.attack_cooldown = 300
+                elif self.attack_cooldown > 0:
+                    self.attack_cooldown -= 1
     
 class Button:
     def __init__(self,game,x, y, width, height, content, fg, bg):
@@ -119,6 +126,48 @@ class Button:
                 return True
             return False
         self.image.fill(self.bg2)
+        self.image.blit(self.text,self.text_rect)
+        self.bg2 = self.bg
+        return False # If the button was not pressed it 
+
+class text_box:
+    def __init__(self,game,x, y, width, height, content, fg, bg):
+        self.game = game
+        #self.font = self.game.my_font # Chooses the default font
+        self.content = content # The programmers text is tunred into the content, this is besically what they want the button to say.
+
+        self.x = x # Yada Yada this is just positioning and width adn height Yada Yada
+        self.y = y
+        self.width = width+32
+        self.height = height 
+
+        self.fg = fg # The foreground colour
+        self.bg = bg # The background olour
+        self.bg2 = self.bg # The secondry background color
+
+        self.image = pygame.Surface([self.width, self.height])
+        self.image.fill(bg)
+        self.rect = self.image.get_rect()
+
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+        self.text = self.game.my_font.render(self.content, True, self.fg)
+        self.text_rect = self.text.get_rect(center = (self.width/2,self.height/2)) # The text will be deiplasyes in the middle of the button
+        self.image.blit(self.text,self.text_rect)
+        
+
+    # This si the buttons function that detects if it has been pressed and returnbd a true or false
+    def is_pressed(self, pos, pressed):
+        if self.rect.collidepoint(pos): # IF the mouse is hovering over the button
+            self.bg2 = 'grey' # The colour of the button will change from whatever it was to grey
+            self.image.blit(self.text,self.text_rect)
+            if pressed[0]: # If the button is pressed it will then return true
+                # self.game.sfx.play(self.game.asset_loader.click_SFX_2)
+                self.image.blit(self.text,self.text_rect)
+                #pg.time.delay(250)
+                return True
+            return False
         self.image.blit(self.text,self.text_rect)
         self.bg2 = self.bg
         return False # If the button was not pressed it 

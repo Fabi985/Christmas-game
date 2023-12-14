@@ -29,7 +29,7 @@ class Player(pygame.sprite.Sprite):
         #-----MOVEMENT--------------
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
-        self.speed = 350
+        self.speed = 400
 
         self.collision_sprites = collision_sprites
 

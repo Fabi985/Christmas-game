@@ -24,11 +24,52 @@ class Level:
         self.collision_sprites = pygame.sprite.Group()
 
         self.main_menu()
+        self.story()
 
         self.setup()
         self.overlay = Overlay(self)
 
         self.time = 0
+
+    def story(self):
+        story = True
+        self.talk = 0
+        self.talk1 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"Hello! 'globmolg' you arnt dead just yet!",'white','black' )
+        self.talk2 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"You went off track when you slipped on some ice!",'white','black' )
+        click_anywhere = self.my_font.render('click anywhere to continue!', True, 'white')
+
+        num = 150
+
+        while story:
+            keys = pygame.key.get_pressed()
+            self.mouse_pos = pygame.mouse.get_pos()
+            self.mouse_pressed = pygame.mouse.get_pressed()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or keys[pygame.K_ESCAPE]:
+                    pygame.quit()
+                    sys.exit
+            self.display_surface.fill('black')
+
+            if num == 0:
+                if self.talk == 0:
+                    if self.talk1.is_pressed(self.mouse_pos, self.mouse_pressed):
+                        self.talk += 1
+                        num = 150
+                
+                    self.display_surface.blit(self.talk1.image, self.talk1.rect)
+                elif self.talk == 1:
+                    if self.talk2.is_pressed(self.mouse_pos, self.mouse_pressed):
+                        self.talk += 1
+                        num = 150
+                        story = False
+                
+                    self.display_surface.blit(self.talk2.image, self.talk2.rect)
+            elif num > 0:
+                num -=1
+
+            self.display_surface.blit(click_anywhere, (self.SCREEN_X // 4, self.SCREEN_Y - 200))
+
+            pygame.display.update()
     
     def main_menu(self):
         menu = True

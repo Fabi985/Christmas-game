@@ -1,4 +1,4 @@
-import pygame
+import pygame, math
 
 from Config import *
 
@@ -12,7 +12,7 @@ class Overlay:
     def display(self):
         #display everyhting for player scrreen
         #TODO: add player health here
-        player_health = self.game.my_font.render('Player Health:'+str(self.game.player.health), True, 'red')
+        player_health = self.game.my_font.render('Player Health:'+str(round(self.game.player.health)), True, 'red')
 
         #Gets the player screen width and height
         x,y = self.display_surface.get_size()
