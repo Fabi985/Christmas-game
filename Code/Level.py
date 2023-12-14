@@ -45,7 +45,7 @@ class Level:
         self.talk = 0
         self.talk1 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"Hello! 'globmolg' you arnt dead just yet!",'white','black' )
         self.talk2 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"You went off track when you slipped on some ice!",'white','black' )
-        self.talk3 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"Use [WASD] to move and [LMB] to shoot/ attack!",'white','black' )
+        self.talk3 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"Use [WASD] to move and outlast everyone!",'white','black' )
         click_anywhere = self.my_font.render('click anywhere to continue!', True, 'white')
 
         num = 150
