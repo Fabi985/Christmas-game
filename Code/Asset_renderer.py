@@ -56,10 +56,10 @@ class Object_renderer:
         self.ginger = pygame.transform.scale(self.ginger, (TILE_SIZE, TILE_SIZE))
 
         #-----PLAYER-----
-        self.player_down = pygame.image.load('Assets/Graphics/motorbike/noarm_down.png').convert_alpha()
-        self.player_left = pygame.image.load('Assets/Graphics/motorbike/noarm_left.png').convert_alpha()
-        self.player_right = pygame.image.load('Assets/Graphics/motorbike/noarm_right.png').convert_alpha()
-        self.player_up = pygame.image.load('Assets/Graphics/motorbike/noarm_up.png').convert_alpha()
+        self.player_down = pygame.image.load('Assets/Graphics/motorbike/boike_down.png').convert_alpha()
+        self.player_left = pygame.image.load('Assets/Graphics/motorbike/boike_left.png').convert_alpha()
+        self.player_right = pygame.image.load('Assets/Graphics/motorbike/boike_right.png').convert_alpha()
+        self.player_up = pygame.image.load('Assets/Graphics/motorbike/boike_up.png').convert_alpha()
         self.player_arm = pygame.image.load('Assets/Graphics/motorbike/arm.png').convert_alpha()
 
 

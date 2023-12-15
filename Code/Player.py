@@ -112,18 +112,19 @@ class Player(pygame.sprite.Sprite):
                         self.pos.y = self.hitbox.centery
     
     def draw_arm(self):
-        self.player_arm = pygame.transform.scale(self.player_arm, (5*2, 11*4)) 
-        # self.game.display_surface.blit(self.player_arm, self.arm_rect)
-        if self.status == 'down' or self.status == 'down_idle':
-            self.arm_rect = (self.x // 2)-9, (self.y // 2)+9
-        elif self.status == 'up' or self.status == 'up_idle':
-            self.arm_rect = (self.x // 2)-20, (self.y // 2)+20
+        # self.player_arm = pygame.transform.scale(self.player_arm, (5*2, 11*4)) 
+        # # self.game.display_surface.blit(self.player_arm, self.arm_rect)
+        # if self.status == 'down' or self.status == 'down_idle':
+        #     self.arm_rect = (self.x // 2)-9, (self.y // 2)+9
+        # elif self.status == 'up' or self.status == 'up_idle':
+        #     self.arm_rect = (self.x // 2)-20, (self.y // 2)+20
         
-        pos = pygame.mouse.get_pos()
-        angle = 360-math.atan2(pos[1]-(self.y // 2)+34,pos[0]-(self.x // 2)-6)*180/math.pi
-        self.rotimage = pygame.transform.rotate(self.player_arm, angle)
-        self.arm_rect = self.rotimage.get_rect(center=((self.x // 2)-6, (self.y // 2)+34))
-        self.game.display_surface.blit(self.rotimage, self.arm_rect) 
+        # pos = pygame.mouse.get_pos()
+        # angle = 360-math.atan2(pos[1]-(self.y // 2)+34,pos[0]-(self.x // 2)-6)*180/math.pi
+        # self.rotimage = pygame.transform.rotate(self.player_arm, angle)
+        # self.arm_rect = self.rotimage.get_rect(center=((self.x // 2)-6, (self.y // 2)+34))
+        # self.game.display_surface.blit(self.rotimage, self.arm_rect) 
+        pass
     
     def boolets(self):
         if self.shooting_cooldown == 0:
