@@ -80,7 +80,7 @@ class Enemies(pygame.sprite.Sprite):
 
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
-        self.speed = random.randint(150, 250)
+        self.speed = random.randint(150, 275)
         
     
     def update(self, dt):

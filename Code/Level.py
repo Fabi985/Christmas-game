@@ -1,5 +1,6 @@
 import pygame, sys
 import random
+import time 
 from Config import *
 from Overlay import *
 from Player import *
@@ -16,6 +17,10 @@ class Level:
         self.my_font = pygame.font.Font('Assets/Font/PressStart2P.ttf', 25)
         self.title_font = pygame.font.Font('Assets/Font/PressStart2P.ttf', 35)
 
+        #Timer
+        self.timer = 8000
+        self.sec = 60
+
         #set up the asset loader
         self.asset_loader = Object_renderer(self)
         self.music = pygame.mixer.Channel(1)
@@ -26,18 +31,20 @@ class Level:
         self.collision_sprites = pygame.sprite.Group()
         self.bullet_collision_sprites = pygame.sprite.Group()
 
+        self.time = 0
+        self.timer = 1300
+
+        self.bullets = []
+
+        self.start_ticks=pygame.time.get_ticks()
+
+        self.win = False
+
         self.main_menu()
         self.story()
 
         self.setup()
         self.overlay = Overlay(self)
-
-        self.time = 0
-        self.timer = 900
-
-        self.bullets = []
-
-        self.start_ticks=pygame.time.get_ticks()
 
     def story(self):
         self.music.play(self.asset_loader.music1, -1)
@@ -149,7 +156,7 @@ class Level:
                     z_layer = LAYERS['ground'])
                 if column == 2:
                     ran = random.randint(1, 100)
-                    if ran >= 15:
+                    if ran >= 10:
                         Block((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.bush, [self.all_sprites, self.collision_sprites], z = LAYERS['bush'])
                     else:
                         Bush((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.bush_evil, [self.all_sprites, self.collision_sprites], z = LAYERS['bush'], game=self, direction='left')
@@ -167,7 +174,7 @@ class Level:
                     groups = self.all_sprites,
                     z_layer = LAYERS['ground'])
                     ran = random.randint(1, 100)
-                    if ran >= 15:
+                    if ran >= 10:
                         Block((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.bush, [self.all_sprites, self.collision_sprites], z = LAYERS['bush'])
                     else:
                         Bush((j*TILE_SIZE, i*TILE_SIZE), self.asset_loader.bush_evil, [self.all_sprites, self.collision_sprites], z = LAYERS['bush'], game=self, direction='right')
@@ -181,6 +188,75 @@ class Level:
     def check_player_health(self):
         if self.player.health <= 0:
             self.dead()
+        if self.win == True:
+            self.winf()
+
+    def winf(self):
+        story = True
+        self.talk = 0
+        self.talk1 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"you win bozo",'white','black' )
+        self.talk2 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"you really became drive by ryian golsing",'white','black' )
+        self.talk3 = text_box(self,0,0 ,self.SCREEN_X,self.SCREEN_Y,"AAAAAAAAAAAAAAAAAAAAA",'white','black' )
+        click_anywhere = self.my_font.render('click anywhere to continue!', True, 'white')
+
+        num = 150
+
+        self.bob = -100
+        self.x_axis, self.y_axis = self.SCREEN_X // 3, self.SCREEN_Y //12#self.SCREEN_X // 3, self.SCREEN_Y //10
+        self.floating = 0
+        self.yug_float = 'up'
+
+        while story:
+            keys = pygame.key.get_pressed()
+            self.mouse_pos = pygame.mouse.get_pos()
+            self.mouse_pressed = pygame.mouse.get_pressed()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or keys[pygame.K_ESCAPE]:
+                    pygame.quit()
+                    sys.exit
+            self.display_surface.fill('black')
+
+            if num == 0:
+                if self.talk == 0:
+                    if self.talk1.is_pressed(self.mouse_pos, self.mouse_pressed):
+                        self.talk += 1
+                        num = 150
+                
+                    self.display_surface.blit(self.talk1.image, self.talk1.rect)
+                elif self.talk == 1:
+                    if self.talk2.is_pressed(self.mouse_pos, self.mouse_pressed):
+                        self.talk += 1
+                        num = 150
+                
+                    self.display_surface.blit(self.talk2.image, self.talk2.rect)
+                elif self.talk == 2:
+                    if self.talk3.is_pressed(self.mouse_pos, self.mouse_pressed):
+                        self.talk += 1
+                        num = 150
+                        pygame.quit()
+                        sys.exit
+                
+                    self.display_surface.blit(self.talk3.image, self.talk3.rect)
+            elif num > 0:
+                num -=1
+            
+            if self.yug_float == 'up':
+                self.y_axis -= 0.03
+                self.floating += 1
+                if self.floating == 200:
+                    self.yug_float = 'down'
+            elif self.yug_float == 'down':
+                self.y_axis += 0.03
+                self.floating -= 1
+                if self.floating == 0:
+                    self.yug_float = 'up'
+
+            self.display_surface.blit(self.asset_loader.gob, (self.SCREEN_X // 3, self.SCREEN_Y //10 + self.y_axis))
+
+
+            self.display_surface.blit(click_anywhere, (self.SCREEN_X // 4, self.SCREEN_Y - 200))
+
+            pygame.display.update()
     
     def dead(self):
         dead_menu = True
@@ -212,10 +288,9 @@ class Level:
     def run(self, dt):
         self.time += 1
         self.seconds = (pygame.time.get_ticks()-self.start_ticks)/1000 #calculate how many seconds
-        if self.seconds > self.timer: # if more than 10 seconds close the game
-            print("win")
-        elif self.seconds < self.timer:
-            self.timer -= 1
+        if self.seconds > self.timer: 
+            self.win = True
+        self.timer -= (self.seconds // 2) * dt
         self.check_player_health()
         self.display_surface.fill('black')
         self.all_sprites.custom_draw(self.player)

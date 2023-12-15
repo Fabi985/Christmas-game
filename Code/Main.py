@@ -1,7 +1,7 @@
 # This si the main file
 # imports
 import pygame, sys, random, datetime
-
+import time 
 from Objects import *
 from Config import  *
 from Asset_renderer import *
@@ -30,6 +30,7 @@ class Main:
     def run(self):
         while True:
             keys = pygame.key.get_pressed()
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or keys[pygame.K_ESCAPE]:
                     pygame.quit()

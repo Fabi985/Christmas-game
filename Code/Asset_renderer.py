@@ -55,6 +55,9 @@ class Object_renderer:
         self.ginger = pygame.image.load('Assets/Graphics/enemies/gingerbread man.png').convert_alpha()
         self.ginger = pygame.transform.scale(self.ginger, (TILE_SIZE, TILE_SIZE))
 
+        self.JERMY = pygame.image.load('Assets/Graphics/enemies/JERMA.png').convert_alpha()
+        self.JERMY = pygame.transform.scale(self.JERMY, (TILE_SIZE, TILE_SIZE))
+
         #-----PLAYER-----
         self.player_down = pygame.image.load('Assets/Graphics/motorbike/boike_down.png').convert_alpha()
         self.player_left = pygame.image.load('Assets/Graphics/motorbike/boike_left.png').convert_alpha()
